@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Project - Shared Bookmarks</title>
+    <script type="module" src="script.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Shared Bookmarks</h1>
+      <p>Save and share links you love.</p>
+    </header>
+
+    <main>
+      <div class="user-select-wrapper">
+        <label for="bookmark-user">Select a user</label>
+        <select name="users" id="bookmark-user"></select>
+      </div>
+
+      <form id="bookmark-form">
+        <h2>Add a Bookmark</h2>
+        <div class="form-group">
+          <label for="url">URL</label>
+          <input type="text" id="url" name="url" required />
+        </div>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description"></textarea>
+        </div>
+        <button type="submit">Add Bookmark</button>
+      </form>
+
+      <div id="no-bookmarks"></div>
+      <ul id="bookmark-list"></ul>
+    </main>
+  </body>
+</html>
