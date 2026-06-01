@@ -35,7 +35,8 @@ function renderBookmarks() {
     description.textContent = bookmark.description;
 
     const timestamp = document.createElement("small");
-    timestamp.textContent = bookmark.timestamp;
+    const date = new Date(bookmark.timestamp * 1000);
+    timestamp.textContent = date.toLocaleString();
 
     li.appendChild(title);
     li.appendChild(description);
