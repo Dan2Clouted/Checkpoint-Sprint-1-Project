@@ -13,18 +13,18 @@ getUserIds().forEach((userId) => {
 
 function renderBookmarks() {
   const selectedUser = dropdown.value;
-  const bookmarks = getData(selectedUser);
+  const bookmarks = getData(selectedUser) || [];
 
   bookmarksList.innerHTML = "";
 
-  if (!bookmarks || bookmarks.length === 0) {
+  if (bookmarks.length === 0) {
     noBookmarks.textContent = "There are no bookmarks for this user.";
     return;
   }
 
   noBookmarks.textContent = "";
 
-  bookmarks.reverse().forEach((bookmark) => {
+  [...bookmarks].reverse().forEach((bookmark) => {
     const li = document.createElement("li");
 
     const title = document.createElement("a");
@@ -40,26 +40,58 @@ function renderBookmarks() {
 
     const clipboardButton = document.createElement("button");
     clipboardButton.textContent = "Copy URL";
-    clipboardButton.addEventListener("click", function () {
-      navigator.clipboard.writeText(bookmark.url);
-    });
 
     const likeButton = document.createElement("button");
     likeButton.textContent = `Likes: ${bookmark.likes || 0}`;
-    likeButton.addEventListener("click", function () {
+
+    clipboardButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(bookmark.url);
+    });
+
+    likeButton.addEventListener("click", () => {
       bookmark.likes = (bookmark.likes || 0) + 1;
       likeButton.textContent = `Likes: ${bookmark.likes}`;
       setData(selectedUser, bookmarks);
     });
 
-    li.appendChild(link);
-    li.appendChild(description);
-    li.appendChild(timestamp);
-    li.appendChild(clipboardButton);
-    li.appendChild(likeButton);
+    li.append(title, description, timestamp, clipboardButton, likeButton);
+
     bookmarksList.appendChild(li);
   });
 }
 
+function addNewBookmark() {
+  const urlInput = document.getElementById("url");
+  const titleInput = document.getElementById("title");
+  const descriptionInput = document.getElementById("description");
+
+  const url = urlInput.value;
+  const title = titleInput.value;
+  const description = descriptionInput.value;
+
+  if (!url.trim() || !title.trim() || !description.trim()) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  const bookmarks = getData(dropdown.value) || [];
+
+  bookmarks.push({
+    title,
+    description,
+    url,
+    timestamp: Date.now(),
+    likes: 0,
+  });
+
+  setData(dropdown.value, bookmarks);
+  renderBookmarks();
+
+  urlInput.value = "";
+  titleInput.value = "";
+  descriptionInput.value = "";
+}
+
 renderBookmarks();
 dropdown.addEventListener("change", renderBookmarks);
+document.getElementById("submit").addEventListener("click", addNewBookmark);
