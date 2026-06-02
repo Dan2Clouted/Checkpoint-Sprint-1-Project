@@ -28,8 +28,10 @@ function renderBookmarks() {
   bookmarks.forEach((bookmark) => {
     const li = document.createElement("li");
 
-    const title = document.createElement("h3");
+    const title = document.createElement("a");
     title.textContent = bookmark.title;
+    title.href = `https://${bookmark.url}`;
+    title.target = "_blank";
 
     const description = document.createElement("p");
     description.textContent = bookmark.description;
