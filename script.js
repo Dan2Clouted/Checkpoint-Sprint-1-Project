@@ -1,4 +1,4 @@
-import { getUserIds, getData } from "./storage.js";
+import { getUserIds, getData, setData } from "./storage.js";
 
 const dropdown = document.getElementById("bookmark-user");
 const bookmarksList = document.getElementById("bookmark-list");
@@ -8,7 +8,6 @@ getUserIds().forEach((userId) => {
   const option = document.createElement("option");
   option.value = userId;
   option.textContent = `User ${userId}`;
-
   dropdown.appendChild(option);
 });
 
@@ -25,7 +24,7 @@ function renderBookmarks() {
 
   noBookmarks.textContent = "";
 
-  bookmarks.forEach((bookmark) => {
+  bookmarks.reverse().forEach((bookmark) => {
     const li = document.createElement("li");
 
     const title = document.createElement("a");
@@ -37,17 +36,30 @@ function renderBookmarks() {
     description.textContent = bookmark.description;
 
     const timestamp = document.createElement("small");
-    const date = new Date(bookmark.timestamp * 1000);
-    timestamp.textContent = date.toLocaleString();
+    timestamp.textContent = new Date(bookmark.timestamp).toLocaleString();
 
-    li.appendChild(title);
+    const clipboardButton = document.createElement("button");
+    clipboardButton.textContent = "Copy URL";
+    clipboardButton.addEventListener("click", function () {
+      navigator.clipboard.writeText(bookmark.url);
+    });
+
+    const likeButton = document.createElement("button");
+    likeButton.textContent = `Likes: ${bookmark.likes || 0}`;
+    likeButton.addEventListener("click", function () {
+      bookmark.likes = (bookmark.likes || 0) + 1;
+      likeButton.textContent = `Likes: ${bookmark.likes}`;
+      setData(selectedUser, bookmarks);
+    });
+
+    li.appendChild(link);
     li.appendChild(description);
     li.appendChild(timestamp);
-
+    li.appendChild(clipboardButton);
+    li.appendChild(likeButton);
     bookmarksList.appendChild(li);
   });
 }
 
 renderBookmarks();
-
 dropdown.addEventListener("change", renderBookmarks);
