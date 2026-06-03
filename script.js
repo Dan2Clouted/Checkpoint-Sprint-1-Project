@@ -35,8 +35,8 @@ function renderBookmarks() {
     const description = document.createElement("p");
     description.textContent = bookmark.description;
 
-    const timestamp = document.createElement("small");
-    timestamp.textContent = new Date(bookmark.timestamp).toLocaleString();
+    const createdAt = document.createElement("small");
+    createdAt.textContent = new Date(bookmark.createdAt).toLocaleString();
 
     const clipboardButton = document.createElement("button");
     clipboardButton.textContent = "Copy URL";
@@ -54,7 +54,7 @@ function renderBookmarks() {
       setData(selectedUser, bookmarks);
     });
 
-    li.append(title, description, timestamp, clipboardButton, likeButton);
+    li.append(title, description, createdAt, clipboardButton, likeButton);
     bookmarksList.appendChild(li);
   });
 }
@@ -84,7 +84,7 @@ function addNewBookmark() {
     title,
     description,
     url,
-    timestamp: Date.now(),
+    createdAt: Date.now(),
     likes: 0,
   });
 
@@ -98,4 +98,10 @@ function addNewBookmark() {
 
 renderBookmarks();
 dropdown.addEventListener("change", renderBookmarks);
-document.getElementById("submit").addEventListener("click", addNewBookmark);
+
+const form = document.getElementById("bookmark-form");
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  addNewBookmark();
+});
