@@ -29,7 +29,7 @@ function renderBookmarks() {
 
     const title = document.createElement("a");
     title.textContent = bookmark.title;
-    title.href = `https://${bookmark.url}`;
+    title.href = bookmark.url;
     title.target = "_blank";
 
     const description = document.createElement("p");
@@ -55,7 +55,6 @@ function renderBookmarks() {
     });
 
     li.append(title, description, timestamp, clipboardButton, likeButton);
-
     bookmarksList.appendChild(li);
   });
 }
@@ -71,6 +70,11 @@ function addNewBookmark() {
 
   if (!url.trim() || !title.trim() || !description.trim()) {
     alert("Please fill in all fields.");
+    return;
+  }
+
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    alert("URL must start with http:// or https://");
     return;
   }
 
